@@ -55,3 +55,5 @@ Makefile
 helm-charts
 .editorconfig
 .idea
+
+.github
