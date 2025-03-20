@@ -1,0 +1,52 @@
+#!/bin/bash
+
+API_URL="http://dragonstone.local:3000"
+
+# Check if required parameters are provided
+if [ $# -lt 3 ]; then
+  echo "Usage: $0 <id> <name> <script>"
+  exit 1
+fi
+
+# Extract parameters
+JOB_ID=$1
+JOB_NAME=$2
+SCRIPT=$3
+
+# Temporary file for script output
+TEMP_OUTPUT=$(mktemp)
+
+# Notify job is running
+curl -X POST "$API_URL/api/jobs/${JOB_ID}" \
+     -H "Content-Type: application/json" \
+     -d "{\"name\": \"${JOB_NAME}\"}"
+
+# Get start time
+START_TIME=$(date +%s%3N)
+
+# Run the script and capture both stdout and stderr
+bash -c "$SCRIPT" > "$TEMP_OUTPUT" 2>&1
+EXIT_CODE=$?
+
+# Calculate duration
+END_TIME=$(date +%s%3N)
+DURATION=$((END_TIME - START_TIME))
+
+# Encode the output of the script as Base64
+SCRIPT_OUTPUT=$(base64 -w 0 "$TEMP_OUTPUT")
+
+echo $SCRIPT_OUTPUT
+
+# Notify job completion status
+if [ $EXIT_CODE -eq 0 ]; then
+  curl -X PUT "$API_URL/api/jobs/${JOB_ID}" \
+       -H "Content-Type: application/json" \
+       -d "{\"status\": \"true\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}"
+else
+  curl -X PUT "$API_URL/api/jobs/${JOB_ID}" \
+       -H "Content-Type: application/json" \
+       -d "{\"status\": \"false\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}"
+fi
+
+# Clean up temporary file
+rm -f "$TEMP_OUTPUT"
