@@ -1,6 +1,6 @@
 #!/bin/bash
 
-API_URL="http://dragonstone.local:3000"
+API_URL="http://localhost:3000"
 
 # Check if required parameters are provided
 if [ $# -lt 3 ]; then
@@ -34,8 +34,6 @@ DURATION=$((END_TIME - START_TIME))
 
 # Encode the output of the script as Base64
 SCRIPT_OUTPUT=$(base64 -w 0 "$TEMP_OUTPUT")
-
-echo $SCRIPT_OUTPUT
 
 # Notify job completion status
 if [ $EXIT_CODE -eq 0 ]; then
