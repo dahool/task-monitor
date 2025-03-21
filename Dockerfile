@@ -1,12 +1,17 @@
-FROM oven/bun:slim
-#FROM node:22-slim
+FROM oven/bun:latest AS builder
 
 WORKDIR /app
-RUN mkdir data
 
 COPY . .
 
 RUN bun install && bun run next build --experimental-build-mode compile
-#RUN yarn install && yarn build
 
-ENTRYPOINT ["bun","start"]
+FROM gcr.io/distroless/nodejs22-debian12
+
+WORKDIR /app
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+CMD ["server.js"]
