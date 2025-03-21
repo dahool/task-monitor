@@ -8,25 +8,33 @@ export default async function JobHistory({id}: {id: string}) {
     const job = await getJob(id)
     const history = await getJobHistory(id);
     return (
-        <div className="bg-white shadow-md rounded-lg mt-4 px-6 py-4">
-            <h3 className="mb-3 text-gray-600 font-bold">{job.name}</h3>
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4 px-6 py-4">
+            <h3 className="mb-3 text-gray-600 dark:text-gray-300 font-bold">{job.name}</h3>
             <table className="min-w-full table-auto">
                 <thead>
-                    <tr className="bg-gray-100 border-b">
-                        <th className="py-2 px-4 text-left">Execution Time</th>
-                        <th className="py-2 px-4 text-left">Status</th>
-                        <th className="py-2 px-4 text-left">Duration</th>
+                    <tr className="bg-gray-100 dark:bg-gray-700 border-b dark:border-gray-600">
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Execution Time</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Status</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Duration</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                     history.map((item, index) => (
-                    <tr key={index} className="border-b">
-                        <td className="py-2 px-4 flex items-center">{item.timestamp.toFormat('dd-MM-yyyy HH:mm')} ({item.timestamp.toRelative()})</td>
-                        <td className="py-2 px-4 space-x-2"><StatusBadge text={item.status}/></td>
-                        <td className="py-2 px-4">{toHumanDuration(item.duration ?? 0)}</td>
-                        <td><ConsoleDialog>{item.output}</ConsoleDialog></td>
+                    <tr key={index} className="border-b dark:border-gray-600">
+                        <td className="py-2 px-4 flex items-center text-gray-700 dark:text-gray-300">
+                            {item.timestamp.toFormat('dd-MM-yyyy HH:mm')} ({item.timestamp.toRelative()})
+                        </td>
+                        <td className="py-2 px-4 space-x-2 text-gray-700 dark:text-gray-300">
+                            <StatusBadge text={item.status} />
+                        </td>
+                        <td className="py-2 px-4 text-gray-700 dark:text-gray-300">
+                            {toHumanDuration(item.duration ?? 0)}
+                        </td>
+                        <td>
+                            <ConsoleDialog>{item.output}</ConsoleDialog>
+                        </td>
                     </tr>
                     ))
                     }

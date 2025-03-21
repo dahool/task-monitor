@@ -7,28 +7,28 @@ import { MdManageHistory } from "react-icons/md"
 export default async function JobList() {
     const jobs = await listJobs()
     return (
-        <div className="bg-white shadow-md rounded-lg mt-4 px-6 py-4">
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4 px-6 py-4">
             <table className="min-w-full table-auto">
                 <thead>
-                    <tr className="bg-gray-100 border-b">
+                    <tr className="bg-gray-100 dark:bg-gray-700 border-b">
                         <th></th>
-                        <th className="py-2 px-4 text-left">Name</th>
-                        <th className="py-2 px-4 text-left">UUID</th>
-                        <th className="py-2 px-4 text-left">Status</th>
-                        <th className="py-2 px-4 text-left">Last Run</th>
-                        <th className="py-2 px-4 text-left">Duration</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Name</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">UUID</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Status</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Last Run</th>
+                        <th className="py-2 px-4 text-left text-gray-700 dark:text-gray-300">Duration</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                     jobs.map((job, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b dark:border-gray-600">
                         <td className="py-2 px-4"><Link href={`/job/${job.uuid}`} title="Execution History"><MdManageHistory /></Link></td>
-                        <td className="py-2 px-4 flex items-center">{job.name}</td>
-                        <td className="py-2 px-4">{job.uuid}</td>
-                        <td className="py-2 px-4 space-x-2"><StatusBadge text={job.status}/></td>
-                        <td className="py-2 px-4">{job.lastRun?.toRelative()}</td>
-                        <td className="py-2 px-4">{toHumanDuration(job.duration ?? 0)}</td>
+                        <td className="py-2 px-4 flex items-center text-gray-700 dark:text-gray-300">{job.name}</td>
+                        <td className="py-2 px-4 text-gray-700 dark:text-gray-300">{job.uuid}</td>
+                        <td className="py-2 px-4 space-x-2 text-gray-700 dark:text-gray-300"><StatusBadge text={job.status}/></td>
+                        <td className="py-2 px-4 text-gray-700 dark:text-gray-300">{job.lastRun?.toRelative()}</td>
+                        <td className="py-2 px-4 text-gray-700 dark:text-gray-300">{toHumanDuration(job.duration ?? 0)}</td>
                     </tr>
                     ))
                     }
