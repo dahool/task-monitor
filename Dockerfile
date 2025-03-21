@@ -10,7 +10,7 @@ FROM gcr.io/distroless/nodejs22-debian12
 
 WORKDIR /app
 
-COPY --from=builder /app/public ./public
+#COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
