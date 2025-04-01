@@ -16,7 +16,7 @@ export const sendFailNotification = async (jobName: string, output: string) => {
         from: environment.mail.from,
         to: environment.mail.recipient,
         subject: `Job ${jobName} failed`,
-        text: output
+        text: Buffer.from(output, 'base64').toString('utf-8')
     };
 
     try {
