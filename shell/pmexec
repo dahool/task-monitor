@@ -25,7 +25,7 @@ curl -X POST "$API_URL/api/jobs/${JOB_ID}" \
 START_TIME=$(date +%s%3N)
 
 # Run the script and capture both stdout and stderr
-bash -c "$SCRIPT" > "$TEMP_OUTPUT" 2>&1
+bash -c "$SCRIPT" 2>&1 | tee "$TEMP_OUTPUT"
 EXIT_CODE=$?
 
 # Calculate duration
@@ -37,14 +37,16 @@ SCRIPT_OUTPUT=$(base64 -w 0 "$TEMP_OUTPUT")
 
 # Notify job completion status
 if [ $EXIT_CODE -eq 0 ]; then
-  curl -X PUT "$API_URL/api/jobs/${JOB_ID}" \
-       -H "Content-Type: application/json" \
-       -d "{\"status\": \"true\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}"
+  echo "{\"name\": \"${JOB_NAME}\", \"status\": \"true\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}" > payload.json
 else
-  curl -X PUT "$API_URL/api/jobs/${JOB_ID}" \
-       -H "Content-Type: application/json" \
-       -d "{\"status\": \"false\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}"
+  echo "{\"name\": \"${JOB_NAME}\", \"status\": \"false\", \"duration\": ${DURATION}, \"output\": \"${SCRIPT_OUTPUT}\"}" > payload.json
 fi
 
+curl -X PUT "$API_URL/api/jobs/${JOB_ID}" \
+     -H "Content-Type: application/json" \
+     --data @payload.json
+
 # Clean up temporary file
-rm -f "$TEMP_OUTPUT"
+rm -f payload.json && rm -f "$TEMP_OUTPUT"
+
+exit $EXIT_CODE
