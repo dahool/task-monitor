@@ -19,7 +19,7 @@ export async function initializeDb() {
 
 export async function listJobs(): Promise<Job[]> {
     return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM jobs",
+        db.all("SELECT * FROM jobs ORDER BY lastRun DESC", [],
             (err, rows) => {
                 if (err) {
                     reject(err)
