@@ -23,6 +23,10 @@ export default function ConsoleDialog({children}: {children: React.ReactNode}) {
         setIsOpen(false)
     }
 
+    if (typeof children === "string" && children.trim() === "") {
+        return null
+    }
+
     return (
         <>
             <ImTerminal  title="Show output"  onClick={() => setIsOpen(true)} className="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"/>
